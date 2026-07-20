@@ -1,0 +1,12 @@
+{
+  "name": "quickchat-full-stack",
+  "version": "1.0.0",
+  "description": "QuickChat Full Stack Application",
+  "scripts": {
+    "install-all": "npm install --prefix client && npm install --prefix server",
+    "dev": "concurrently \"npm run server --prefix server\" \"npm run dev --prefix client\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
