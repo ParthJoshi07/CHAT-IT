@@ -11,9 +11,7 @@ import messageRouter from "./routes/messageRoutes.js";
 const app = express();
 const server = http.createServer(app);
 
-// =========================
-// Socket.IO Setup
-// =========================
+// Socket.IO
 export const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_URL || "*",
@@ -21,10 +19,9 @@ export const io = new Server(server, {
   },
 });
 
-// Store online users
+// Online users
 export const userSocketMap = {};
 
-// Socket connection
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
 
@@ -47,9 +44,7 @@ io.on("connection", (socket) => {
   });
 });
 
-// =========================
 // Middlewares
-// =========================
 app.use(express.json({ limit: "4mb" }));
 
 app.use(
@@ -59,22 +54,23 @@ app.use(
   })
 );
 
-// =========================
-// Routes
-// =========================
+// Test Route
+app.get("/", (req, res) => {
+  res.send("Backend Running Successfully");
+});
+
 app.get("/api/status", (req, res) => {
-  res.status(200).json({
+  res.json({
     success: true,
     message: "Server is Live",
   });
 });
 
+// Routes
 app.use("/api/auth", userRouter);
 app.use("/api/messages", messageRouter);
 
-// =========================
 // Start Server
-// =========================
 const PORT = process.env.PORT || 5000;
 
 try {
@@ -83,10 +79,7 @@ try {
   server.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
   });
-} catch (error) {
-  console.error("❌ Failed to connect to MongoDB");
-  console.error(error);
+} catch (err) {
+  console.error("MongoDB Connection Error:", err);
   process.exit(1);
 }
-
-export default server;
